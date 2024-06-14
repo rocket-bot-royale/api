@@ -1,4 +1,6 @@
 from uuid import uuid4
+from typing import Optional
+from requests import Response
 
 from .session import make_request
 from .types import (
@@ -14,8 +16,6 @@ from .errors import (
     FriendRequestError,
     LootBoxError,
 )
-
-from typing import Optional
 
 CLIENT_VERSION = "61"
 BASE_URL = "https://dev-nakama.winterpixel.io/v2"
@@ -46,7 +46,7 @@ class RocketBotRoyale:
 
     def authenticate(self, timeout: int = None) -> "AuthenticateResponse":
         """
-        Authenticate the user with the RocketBotRoyale API
+        Authenticate the user.
 
         Args:
             timeout (int, optional): Timeout for the request in seconds.
@@ -63,7 +63,7 @@ class RocketBotRoyale:
             "vars": {"client_version": CLIENT_VERSION},
         }
 
-        def check(response):
+        def check_if_ok(response: Response):
             if not response.ok:
                 raise AuthenticationError(
                     response.json().get("message", "Unable to login")
@@ -73,7 +73,7 @@ class RocketBotRoyale:
             f"{BASE_URL}/account/authenticate/email?create=false&",
             headers=BASE_HEADERS,
             json=data,
-            fn=check,
+            fn=check_if_ok,
             timeout=timeout,
         )
 
@@ -109,7 +109,7 @@ class RocketBotRoyale:
 
     def collect_timed_bonus(self, timeout: int = None) -> bool:
         """
-        Collect timed bonus
+        Collect timed bonus.
 
         Args:
             timeout (int, optional): Timeout for the request in seconds.
@@ -124,12 +124,13 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        def check(response):
-            if not response.ok:
+        def check_if_ok(response: Response):
+            if not response:
                 raise CollectTimedBonusError(
                     response.json().get("message", "Unable to collect coins now")
                 )
 
+        data = '"{}"'
         make_request(
             f"{BASE_URL}/rpc/collect_timed_bonus",
             headers={
@@ -137,8 +138,8 @@ class RocketBotRoyale:
                 "authorization": f"Bearer {self.token}",
                 "content-type": "application/x-www-form-urlencoded",
             },
-            data='"{}"',
-            fn=check,
+            data=data,
+            fn=check_if_ok,
             timeout=timeout,
         )
 
@@ -146,7 +147,7 @@ class RocketBotRoyale:
 
     def send_friend_request(self, friend_code: str, timeout: int = None) -> bool:
         """
-        Send a friend request using the RocketBotRoyale API.
+        Send a friend request.
 
         Args:
             friend_code (str): The friend code of the user to send the friend request to.
@@ -162,7 +163,7 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        def check(response):
+        def check_if_ok(response: Response):
             if not response.ok:
                 raise FriendRequestError(
                     response.json().get("message", "Unable to send friend request")
@@ -177,7 +178,7 @@ class RocketBotRoyale:
                 "content-type": "application/x-www-form-urlencoded",
             },
             data=data,
-            fn=check,
+            fn=check_if_ok,
             timeout=timeout,
         )
 
@@ -201,7 +202,7 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        def check(response):
+        def check_if_ok(response: Response):
             if not response.ok:
                 raise LootBoxError(
                     response.json().get("message", "Unable to buy crate")
@@ -216,7 +217,7 @@ class RocketBotRoyale:
                 "content-type": "application/json",
             },
             data=data,
-            fn=check,
+            fn=check_if_ok,
             timeout=timeout,
         )
 
@@ -229,7 +230,7 @@ class RocketBotRoyale:
     @staticmethod
     def signup(email: str, password: str, username: str, timeout=None) -> bool:
         """
-        Sign up a new user with the RocketBotRoyale API.
+        Sign up a new user.
 
         Args:
             email (str): New account email.
@@ -255,7 +256,7 @@ class RocketBotRoyale:
 
         temp_account = RocketBotRoyale.__custom_account()
 
-        def check(response):
+        def check_if_okIfOK(response: Response):
             if not response.ok:
                 raise SignUpError(response.json().get("message", "Unable to signup"))
 
@@ -267,7 +268,7 @@ class RocketBotRoyale:
                 "content-type": "application/x-www-form-urlencoded",
             },
             data=data,
-            fn=check,
+            fn=check_if_ok,
             timeout=timeout,
         )
 
@@ -280,7 +281,7 @@ class RocketBotRoyale:
             "vars": {"client_version": CLIENT_VERSION, "platform": "HTML5"},
         }
 
-        def check(response):
+        def check_if_ok(response: Response):
             if not response.ok:
                 raise AuthenticationError(
                     response.json().get("message", "Unable to login")
@@ -290,7 +291,7 @@ class RocketBotRoyale:
             f"{BASE_URL}/account/authenticate/custom?create=true&",
             headers=BASE_HEADERS,
             json=data,
-            fn=check,
+            fn=check_if_ok,
             timeout=timeout,
         )
 
