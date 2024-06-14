@@ -256,7 +256,7 @@ class RocketBotRoyale:
 
         temp_account = RocketBotRoyale.__custom_account()
 
-        def check_if_okIfOK(response: Response):
+        def check_if_ok(response: Response):
             if not response.ok:
                 raise SignUpError(response.json().get("message", "Unable to signup"))
 
