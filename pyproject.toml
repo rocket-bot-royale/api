@@ -24,3 +24,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/Rocket-Bot-Royale/api"
 Issues = "https://github.com/Rocket-Bot-Royale/api/issues"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+exclude = ["examples"]
