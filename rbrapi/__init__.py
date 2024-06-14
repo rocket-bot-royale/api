@@ -1,8 +1,19 @@
 from uuid import uuid4
 
 from .session import make_request
-from .types import AuthenticateResponse, AccountResponse, SignUpResponse
-from .errors import AuthenticationError, SignUpError, CollectTimedBonus
+from .types import (
+    AuthenticateResponse,
+    AccountResponse,
+    SignUpResponse,
+    LootBoxResponses,
+)
+from .errors import (
+    AuthenticationError,
+    SignUpError,
+    CollectTimedBonusError,
+    FriendRequestError,
+    LootBoxError,
+)
 
 from typing import Optional
 
@@ -108,14 +119,14 @@ class RocketBotRoyale:
 
         Raises:
             AuthenticationError: If authentication token is missing or invalid.
-            CollectTimedBonus: If collecting timed bonus fails.
+            CollectTimedBonusError: If collecting timed bonus fails.
         """
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
         def check(response):
             if not response.ok:
-                raise CollectTimedBonus(
+                raise CollectTimedBonusError(
                     response.json().get("message", "Unable to collect coins now")
                 )
 
@@ -132,6 +143,88 @@ class RocketBotRoyale:
         )
 
         return True
+
+    def send_friend_request(self, friend_code: str, timeout: int = None) -> bool:
+        """
+        Send a friend request using the RocketBotRoyale API.
+
+        Args:
+            friend_code (str): The friend code of the user to send the friend request to.
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            bool: True if the friend request was sent successfully.
+
+        Raises:
+            AuthenticationError: If authentication token is missing or invalid.
+            FriendRequestError: If sending the friend request fails.
+        """
+        if not self.token:
+            raise AuthenticationError("Token not found or user is unauthenticated")
+
+        def check(response):
+            if not response.ok:
+                raise FriendRequestError(
+                    response.json().get("message", "Unable to send friend request")
+                )
+
+        data = ('"{\\"friend_code\\":\\"' + friend_code + '\\"}"',)
+        make_request(
+            f"{BASE_URL}/rpc/winterpixel_query_user_id_for_friend_code",
+            headers={
+                **BASE_HEADERS,
+                "authorization": f"Bearer {self.token}",
+                "content-type": "application/x-www-form-urlencoded",
+            },
+            data=data,
+            fn=check,
+            timeout=timeout,
+        )
+
+        return True
+
+    def buy_crate(self, elite: bool = False, timeout: int = None) -> "LootBoxResponses":
+        """
+        Purchase a crate.
+
+        Args:
+            elite (bool, optional): Indicates if the crate to be bought is elite. Defaults to False.
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            LootBoxResponses: Response object containing details of the purchased crate.
+
+        Raises:
+            AuthenticationError: If authentication token is missing or invalid.
+            LootBoxError: If purchasing the crate fails.
+        """
+        if not self.token:
+            raise AuthenticationError("Token not found or user is unauthenticated")
+
+        def check(response):
+            if not response.ok:
+                raise LootBoxError(
+                    response.json().get("message", "Unable to buy crate")
+                )
+
+        data = '"{\\"unique\\":false}"'
+        response = make_request(
+            f"{BASE_URL}/rpc/tankkings_consume_lootbox",
+            headers={
+                **BASE_HEADERS,
+                "authorization": f"Bearer {self.token}",
+                "content-type": "application/json",
+            },
+            data=data,
+            fn=check,
+            timeout=timeout,
+        )
+
+        payload = response.get("payload")
+        if payload:
+            return LootBoxResponses.from_dict(payload)
+
+        raise LootBoxError(response.json().get("message", "Unable to buy crate"))
 
     @staticmethod
     def signup(email: str, password: str, username: str, timeout=None) -> bool:

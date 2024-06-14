@@ -6,5 +6,13 @@ class SignUpError(Exception):
     pass
 
 
-class CollectTimedBonus(Exception):
+class CollectTimedBonusError(Exception):
+    pass
+
+
+class FriendRequestError(Exception):
+    pass
+
+
+class LootBoxError(Exception):
     pass

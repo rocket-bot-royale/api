@@ -51,7 +51,6 @@ class UserResponse(TypedDict):
     update_time: str
     progress: ProgressResponse
     goals: List[GoalResponse]
-    
 
 
 class Wallet(TypedDict):
@@ -69,3 +68,11 @@ class AccountResponse(APIResponse):
         super().__init__(
             user=user, wallet=json.loads(wallet), email=email, custom_id=custom_id
         )
+
+
+class LootBoxResponses(APIResponse):
+    award_id: str
+    is_new: bool
+
+    def __init__(self, award_id: str, is_new: bool):
+        super().__init__(award_id=award_id, is_new=is_new)
