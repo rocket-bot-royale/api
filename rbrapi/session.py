@@ -35,8 +35,7 @@ def make_request(
     fn=None,
     data=None,
 ) -> dict:
-    """Make a GET request using the session."""
-
+    """Make a request using the session."""
     session = get_session()
 
     if method == "POST":

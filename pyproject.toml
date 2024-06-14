@@ -1,7 +1,7 @@
 [project]
 
 name = "rbrapi"
-version = "0.1"
+version = "0.2"
 
 authors = [
   { name="VWH", email="vwhe@proton.me" },

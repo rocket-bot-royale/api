@@ -21,9 +21,11 @@ BASE_HEADERS = {
 class RocketBotRoyale:
     def __init__(self, email: str = None, password: str = None) -> None:
         """
+        Initialize RocketBotRoyale instance with email and password.
+
         Args:
-            email (str): the account email
-            password (str): the account password
+            email (str): The account email.
+            password (str): The account password.
         """
 
         self.email = email
@@ -32,6 +34,18 @@ class RocketBotRoyale:
         self.authenticate()
 
     def authenticate(self, timeout: int = None) -> "AuthenticateResponse":
+        """
+        Authenticate the user with the RocketBotRoyale API
+
+        Args:
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            AuthenticateResponse: Response object containing authentication details.
+
+        Raises:
+            AuthenticationError: If authentication fails.
+        """
         data = {
             "email": self.email,
             "password": self.password,
@@ -58,6 +72,18 @@ class RocketBotRoyale:
         return response_data
 
     def account(self, timeout: int = None) -> "AccountResponse":
+        """
+        Retrieve account details for the authenticated user.
+
+        Args:
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            AccountResponse: Response object containing account details.
+
+        Raises:
+            AuthenticationError: If authentication token is missing or invalid.
+        """
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
@@ -71,6 +97,19 @@ class RocketBotRoyale:
         return AccountResponse.from_dict(response)
 
     def collect_timed_bonus(self, timeout: int = None) -> bool:
+        """
+        Collect timed bonus
+
+        Args:
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            bool: True if timed bonus collection was successful.
+
+        Raises:
+            AuthenticationError: If authentication token is missing or invalid.
+            CollectTimedBonus: If collecting timed bonus fails.
+        """
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
@@ -96,6 +135,21 @@ class RocketBotRoyale:
 
     @staticmethod
     def signup(email: str, password: str, username: str, timeout=None) -> bool:
+        """
+        Sign up a new user with the RocketBotRoyale API.
+
+        Args:
+            email (str): New account email.
+            password (str): New account password.
+            username (str): Display name for the new account.
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            bool: True if signup was successful.
+
+        Raises:
+            SignUpError: If signup fails.
+        """
         data = (
             '"{\\"display_name\\":\\"'
             + username
