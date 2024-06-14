@@ -51,11 +51,17 @@ class UserResponse(TypedDict):
     update_time: str
     progress: ProgressResponse
     goals: List[GoalResponse]
+    
+
+
+class Wallet(TypedDict):
+    coins: str
+    gems: str
 
 
 class AccountResponse(APIResponse):
     user: UserResponse
-    wallet: Dict[str, int]
+    wallet: Wallet
     email: str
     custom_id: str
 
