@@ -1,6 +1,6 @@
 from uuid import uuid4
 from typing import Optional
-from requests import Response
+from json import loads
 
 from .session import make_request
 from .types import (
@@ -151,7 +151,7 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        data = ('"{\\"friend_code\\":\\"' + friend_code + '\\"}"',)
+        data = '"{\\"friend_code\\":\\"' + friend_code + '\\"}"'
         make_request(
             f"{BASE_URL}/rpc/winterpixel_query_user_id_for_friend_code",
             headers={
@@ -198,10 +198,14 @@ class RocketBotRoyale:
         )
 
         payload = response.get("payload")
+
+        if isinstance(payload, str):
+            payload = loads(payload)
+
         if payload:
             return LootBoxResponses.from_dict(payload)
 
-        raise LootBoxError(response.json().get("message", "Unable to buy crate"))
+        raise LootBoxError(response.get("message", "Unable to buy crate"))
 
     @staticmethod
     def signup(email: str, password: str, username: str, timeout=None) -> bool:
