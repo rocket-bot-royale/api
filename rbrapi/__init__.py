@@ -63,18 +63,12 @@ class RocketBotRoyale:
             "vars": {"client_version": CLIENT_VERSION},
         }
 
-        def check_if_ok(response: Response):
-            if not response.ok:
-                raise AuthenticationError(
-                    response.json().get("message", "Unable to login")
-                )
-
         response = make_request(
             f"{BASE_URL}/account/authenticate/email?create=false&",
             headers=BASE_HEADERS,
             json=data,
-            fn=check_if_ok,
             timeout=timeout,
+            error_if_not_ok=AuthenticationError,
         )
 
         response_data = AuthenticateResponse.from_dict(response)
@@ -124,12 +118,6 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        def check_if_ok(response: Response):
-            if not response:
-                raise CollectTimedBonusError(
-                    response.json().get("message", "Unable to collect coins now")
-                )
-
         data = '"{}"'
         make_request(
             f"{BASE_URL}/rpc/collect_timed_bonus",
@@ -139,7 +127,7 @@ class RocketBotRoyale:
                 "content-type": "application/x-www-form-urlencoded",
             },
             data=data,
-            fn=check_if_ok,
+            error_if_not_ok=CollectTimedBonusError,
             timeout=timeout,
         )
 
@@ -163,12 +151,6 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        def check_if_ok(response: Response):
-            if not response.ok:
-                raise FriendRequestError(
-                    response.json().get("message", "Unable to send friend request")
-                )
-
         data = ('"{\\"friend_code\\":\\"' + friend_code + '\\"}"',)
         make_request(
             f"{BASE_URL}/rpc/winterpixel_query_user_id_for_friend_code",
@@ -178,7 +160,7 @@ class RocketBotRoyale:
                 "content-type": "application/x-www-form-urlencoded",
             },
             data=data,
-            fn=check_if_ok,
+            error_if_not_ok=FriendRequestError,
             timeout=timeout,
         )
 
@@ -202,12 +184,6 @@ class RocketBotRoyale:
         if not self.token:
             raise AuthenticationError("Token not found or user is unauthenticated")
 
-        def check_if_ok(response: Response):
-            if not response.ok:
-                raise LootBoxError(
-                    response.json().get("message", "Unable to buy crate")
-                )
-
         data = '"{\\"unique\\":false}"'
         response = make_request(
             f"{BASE_URL}/rpc/tankkings_consume_lootbox",
@@ -217,7 +193,7 @@ class RocketBotRoyale:
                 "content-type": "application/json",
             },
             data=data,
-            fn=check_if_ok,
+            error_if_not_ok=LootBoxError,
             timeout=timeout,
         )
 
@@ -255,11 +231,6 @@ class RocketBotRoyale:
         )
 
         temp_account = RocketBotRoyale.__custom_account()
-
-        def check_if_ok(response: Response):
-            if not response.ok:
-                raise SignUpError(response.json().get("message", "Unable to signup"))
-
         make_request(
             f"{BASE_URL}/rpc/winterpixel_signup",
             headers={
@@ -268,7 +239,7 @@ class RocketBotRoyale:
                 "content-type": "application/x-www-form-urlencoded",
             },
             data=data,
-            fn=check_if_ok,
+            error_if_not_ok=SignUpError,
             timeout=timeout,
         )
 
@@ -281,17 +252,11 @@ class RocketBotRoyale:
             "vars": {"client_version": CLIENT_VERSION, "platform": "HTML5"},
         }
 
-        def check_if_ok(response: Response):
-            if not response.ok:
-                raise AuthenticationError(
-                    response.json().get("message", "Unable to login")
-                )
-
         response = make_request(
             f"{BASE_URL}/account/authenticate/custom?create=true&",
             headers=BASE_HEADERS,
             json=data,
-            fn=check_if_ok,
+            error_if_not_ok=AuthenticationError,
             timeout=timeout,
         )
 

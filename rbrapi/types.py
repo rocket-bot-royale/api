@@ -1,5 +1,6 @@
-from typing import TypedDict, Dict, List
 import json
+
+from typing import TypedDict, Dict, List
 
 
 class APIResponse:
