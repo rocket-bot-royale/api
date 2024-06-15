@@ -296,9 +296,3 @@ class RocketBotRoyale:
         )
 
         return SignUpResponse.from_dict(response)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        return self

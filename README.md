@@ -9,7 +9,6 @@ This is an unofficial Python client for the Rocket Bot Royale game API. It allow
 Install the package using pip:
 
 ```
-bash
 pip install -U rbrapi
 ```
 
@@ -132,17 +131,4 @@ try:
         print("Failed to sign up user.")
 except SignUpError as e:
     print(f"Failed to sign up user: {e}")
-```
-
-### Context Manager Support
-
-The `RocketBotRoyale` class supports usage as a context manager:
-
-```python
-with RocketBotRoyale(email="your_email@example.com", password="your_password") as client:
-    try:
-        client.authenticate()
-        # Perform authenticated operations...
-    except AuthenticationError as e:
-        print(f"Authentication failed: {e}")
 ```
