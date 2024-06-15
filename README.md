@@ -1,4 +1,4 @@
-# Unofficial Python Client for Rocket Bot Royale Game API
+# Unofficial Client for RocketBotRoyale Game API
 
 **⚠️️ For Educational Use Only!**
 
@@ -28,7 +28,7 @@ client = RocketBotRoyale(email="email@example.com", password="your_password")
 
 ### Authentication
 
-Authenticate with the Rocket Bot Royale API using provided credentials:
+Authenticate with the RocketBotRoyale API using provided credentials:
 
 > **Note:** It auto-authenticates when `RocketBotRoyale` is initialized. Use this only for regenerating the session token.
 
@@ -42,7 +42,7 @@ except AuthenticationError as e:
 
 ### Account Details
 
-Retrieve account details after successful authentication:
+Retrieve account details:
 
 ```python
 try:
@@ -57,7 +57,7 @@ except AuthenticationError as e:
 
 ### Collect Timed Bonus
 
-Collect a timed bonus for the authenticated user:
+Collect a timed bonus:
 
 ```python
 from rbrapi.errors import CollectTimedBonusError
@@ -114,7 +114,7 @@ except LootBoxError as e:
 
 ### Sign Up New User
 
-Sign up a new user with the Rocket Bot Royale API:
+Make a new account with the RocketBotRoyale API:
 
 ```python
 from rbrapi.errors import SignUpError
