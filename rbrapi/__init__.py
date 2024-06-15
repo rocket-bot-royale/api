@@ -1,3 +1,5 @@
+__version__ = "0.5"
+
 from uuid import uuid4
 from typing import Optional
 from json import loads
