@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, dumps
 
 from typing import TypedDict, Dict, List
 
@@ -7,6 +7,20 @@ class APIResponse:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def __str__(self) -> str:
+        return dumps(
+            {
+                "_": self.__class__.__name__,
+                **{
+                    attr: (getattr(self, attr))
+                    for attr in filter(lambda x: not x.startswith("_"), self.__dict__)
+                    if getattr(self, attr) is not None
+                },
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
 
     @classmethod
     def from_dict(cls, data: Dict[str, str]) -> "APIResponse":
