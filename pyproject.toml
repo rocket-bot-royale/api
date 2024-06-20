@@ -1,7 +1,7 @@
 [project]
 
 name = "rbrapi"
-version = "0.5"
+version = "0.6"
 
 authors = [
   { name="VWH", email="vwhe@proton.me" },
@@ -10,6 +10,13 @@ authors = [
 description = "Unofficial Python Client for Rocket Bot Royale Game API"
 readme = "README.md"
 requires-python = ">=3.8"
+
+keywords = [
+    "Rocket Bot Royale",
+    "game API",
+    "Unofficial API",
+    "Python library",
+]
 
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -22,8 +29,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Rocket-Bot-Royale/api"
-Issues = "https://github.com/Rocket-Bot-Royale/api/issues"
+Homepage = "https://github.com/rocket-bot-royale/api"
+Issues = "https://github.com/rocket-bot-royale/api/issues"
 
 [tool.setuptools]
 include-package-data = false
