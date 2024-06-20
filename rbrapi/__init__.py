@@ -17,6 +17,7 @@ from .errors import (
     CollectTimedBonusError,
     FriendRequestError,
     LootBoxError,
+    userNotExistError,
 )
 
 CLIENT_VERSION = "61"
@@ -208,6 +209,48 @@ class RocketBotRoyale:
             return LootBoxResponses.from_dict(payload)
 
         raise LootBoxError(response.get("message", "Unable to buy crate"))
+
+    def friend_code_to_id(self, friend_code: str, timeout: int = None) -> str:
+        """
+        Convert a friend code to a user ID.
+
+        Args:
+            friend_code (str): The friend code to be converted to a user ID.
+            timeout (int, optional): Timeout for the request in seconds.
+
+        Returns:
+            str: The user ID corresponding to the given friend code.
+
+        Raises:
+            AuthenticationError: If authentication token is missing or invalid.
+            userNotExistError: If the user with the given friend code does not exist or if the request fails.
+        """
+
+        if not self.token:
+            raise AuthenticationError("Token not found or user is unauthenticated")
+
+        data = '"{\\"friend_code\\":\\"' + friend_code + '\\"}"'
+        response = make_request(
+            f"{BASE_URL}/rpc/winterpixel_query_user_id_for_friend_code",
+            headers={
+                **BASE_HEADERS,
+                "authorization": f"Bearer {self.token}",
+                "content-type": "application/json",
+            },
+            data=data,
+            error_if_not_ok=userNotExistError,
+            timeout=timeout,
+        )
+
+        payload = response.get("payload")
+
+        if isinstance(payload, str):
+            payload = loads(payload)
+
+        if payload and payload.get("user_id"):
+            return payload.get("user_id")
+
+        raise userNotExistError(response.get("message", "Unable to get user id"))
 
     @staticmethod
     def signup(email: str, password: str, username: str, timeout=None) -> bool:

@@ -36,3 +36,11 @@ class LootBoxError(Exception):
     """
 
     pass
+
+
+class userNotExistError(Exception):
+    """
+    Exception raised for errors in sending a query to find a user.
+    """
+
+    pass

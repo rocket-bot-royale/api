@@ -1,5 +1,7 @@
 # Unofficial Client for RocketBotRoyale Game API
 
+[![Downloads](https://static.pepy.tech/badge/rbrapi)](https://pepy.tech/project/rbrapi)
+
 **⚠️️ For Educational Use Only!**
 
 This is an unofficial Python client for the Rocket Bot Royale game API. It allows users to interact with the game API, including authenticating, retrieving account details, collecting timed bonuses, sending friend requests, and purchasing crates.
@@ -81,7 +83,7 @@ Send a friend request to another user:
 ```python
 from rbrapi.errors import FriendRequestError
 
-friend_code = "your_friend_code"
+friend_code = "c2829d50"
 
 try:
     success = client.send_friend_request(friend_code)
@@ -93,6 +95,24 @@ except AuthenticationError as e:
     print(f"Authentication failed: {e}")
 except FriendRequestError as e:
     print(f"Failed to send friend request: {e}")
+```
+
+### Convert Friend Code to User ID
+
+Convert a friend's code to their user ID:
+
+```python
+from rbrapi.errors import AuthenticationError, userNotExistError
+
+friend_code = "c2829d50"
+
+try:
+    user_id = client.friend_code_to_id(friend_code)
+    print(f"User ID: {user_id}")
+except AuthenticationError as e:
+    print(f"Authentication failed: {e}")
+except userNotExistError as e:
+    print(f"User does not exist: {e}")
 ```
 
 ### Purchase Crate
