@@ -1,4 +1,4 @@
-__version__ = "0.5"
+__version__ = "0.6"
 
 from uuid import uuid4
 from typing import Optional
