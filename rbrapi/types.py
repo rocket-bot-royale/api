@@ -1,14 +1,15 @@
-from json import loads, dumps
+from __future__ import annotations
 
-from typing import TypedDict, Dict, List
+from json import dumps, loads
+from typing import Any, Self, TypedDict
 
 
 class APIResponse:
-    def __init__(self, **kwargs):
+    def __init__(self: Self, **kwargs: Any) -> None:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def __str__(self) -> str:
+    def __str__(self: Self) -> str:
         return dumps(
             {
                 "_": self.__class__.__name__,
@@ -23,7 +24,7 @@ class APIResponse:
         )
 
     @classmethod
-    def from_dict(cls, data: Dict[str, str]) -> "APIResponse":
+    def from_dict(cls: type[Self], data: dict[str, str]) -> Self:
         return cls(**data)
 
 
@@ -31,7 +32,7 @@ class AuthenticateResponse(APIResponse):
     token: str
     refresh_token: str
 
-    def __init__(self, token: str, refresh_token: str):
+    def __init__(self: Self, *, token: str, refresh_token: str) -> None:
         super().__init__(token=token, refresh_token=refresh_token)
 
 
@@ -40,7 +41,7 @@ class SignUpResponse(APIResponse):
     refresh_token: str
     created: bool
 
-    def __init__(self, token: str, refresh_token: str, created: bool):
+    def __init__(self: Self, *, token: str, refresh_token: str, created: bool) -> None:
         super().__init__(token=token, refresh_token=refresh_token, created=created)
 
 
@@ -177,5 +178,5 @@ class LootBoxResponses(APIResponse):
     award_id: str
     is_new: bool
 
-    def __init__(self, award_id: str, is_new: bool):
+    def __init__(self: Self, *, award_id: str, is_new: bool) -> None:
         super().__init__(award_id=award_id, is_new=is_new)
