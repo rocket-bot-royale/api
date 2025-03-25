@@ -22,7 +22,7 @@ from .types import (
     SignUpResponse,
 )
 
-CLIENT_VERSION = "9999999999" # will never raise an AuthenticationError for having an older client version
+CLIENT_VERSION = "9999999999"  # will never raise an AuthenticationError for having an older client version
 BASE_URL = "https://dev-nakama.winterpixel.io/v2"
 BASE_HEADERS = {
     "accept": "application/json",
